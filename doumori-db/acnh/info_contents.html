@@ -1,0 +1,247 @@
+<h1>データベース情報: あつまれどうぶつの森</h1>
+
+<h3>テーブル一覧</h3>
+<ul class="ul_style_none">
+	<li><a href="#bugs">虫（テーブル名：bugs）</a></li>
+	<li><a href="#fish">魚（テーブル名：fish）</a></li>
+	<li><a href="#sea_creatures">海の幸（テーブル名：sea_creatures）</a></li>
+</ul>
+
+
+<h2 id="bugs">虫（テーブル名：bugs）</h2>
+<div class="def">
+	<table>
+			<tr>
+					<th>カラム名</th>
+					<th>データ型</th>
+					<th>値</th>
+					<th>内容（単位）</th>
+			</tr>
+			<tr>
+					<td>name</td>
+					<td>varchar</td>
+					<td>[文字列]</td>
+					<td>虫の名前</td>
+			</tr>
+			<tr>
+					<td>size</td>
+					<td>varchar</td>
+					<td>1×1</td>
+					<td>配置時の大きさ（マス）</td>
+			</tr>
+			<tr>
+				<td>price</td>
+				<td>int</td>
+				<td>[整数]</td>
+				<td>店での売値</td>
+			</tr>
+			<tr>
+				<td>place</td>
+				<td>varchar</td>
+				<td>[文字列]</td>
+				<td>採れる場所</td>
+			</tr>
+			<tr>
+				<td>season</td>
+				<td>varchar</td>
+				<td>一年中, ○月〜○月<br>例：5月〜12月</td>
+				<td>採れる時期（カッコ内は南半球）</td>
+			</tr>
+			<tr>
+				<td>time</td>
+				<td>varchar</td>
+				<td>一日中, ○〜○<br>（○=朝/昼/夕①/夕②/夜/深夜（※1））<br>例：夕②〜朝</td>
+				<td>採れる時間帯</td>
+		</tr>
+		<tr>
+			<td>weather</td>
+			<td>varchar</td>
+			<td>雨天時のみ, 雨天時×, なし</td>
+			<td>天候条件</td>
+		</tr>
+		<tr>
+			<td>m○<br>(○=1~12)</td>
+			<td>int</td>
+			<td>0, 1</td>
+			<td>○月に採れるかどうか（※2）</td>
+		</tr>
+		<tr>
+			<td>t○<br>(○=0~23)</td>
+			<td>int</td>
+			<td>0, 1</td>
+			<td>○時に採れるかどうか（※2）</td>
+		</tr>
+		</table>
+		<p class="sql_example">
+			※1　朝...4:00~7:59、昼...8:00~15:59、夕①...16:00~16:59、夕②...17:00~18:59、夜...19:00~22:59、深夜...23:59~03:59<br>
+			※2　0：採れない　1：採れる
+		</p>
+		</div>
+		
+
+
+<h2 id="fish">魚（テーブル名：fish）</h2>
+<div class="def">
+	<table>
+			<tr>
+					<th>カラム名</th>
+					<th>データ型</th>
+					<th>値</th>
+					<th>内容（単位）</th>
+			</tr>
+			<tr>
+					<td>name</td>
+					<td>varchar</td>
+					<td>[文字列]</td>
+					<td>魚の名前</td>
+			</tr>
+			<tr>
+					<td>size</td>
+					<td>varchar</td>
+					<td>1×1, 2×1</td>
+					<td>配置時の大きさ（マス）</td>
+			</tr>
+			<tr>
+				<td>price</td>
+				<td>int</td>
+				<td>[整数]</td>
+				<td>店での売値</td>
+		</tr>
+		<tr>
+			<td>place</td>
+			<td>varchar</td>
+			<td>川, 池, 崖上, 河口, 桟橋, 海</td>
+			<td>釣れる場所</td>
+		</tr>
+		<tr>
+			<td>season</td>
+			<td>varchar</td>
+			<td>一年中, ○月〜○月<br>例：5月〜12月</td>
+			<td>釣れる時期（カッコ内は南半球）</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>varchar</td>
+			<td>一日中, 朝/昼/夕/夜の組み合わせ（※1）<br>例：朝、夕、夜</td>
+			<td>釣れる時間帯</td>
+		</tr>
+		<tr>
+			<td>weather</td>
+			<td>varchar</td>
+			<td>雨天時のみ, なし</td>
+			<td>天候条件</td>
+		</tr>
+		<tr>
+			<td>shadow</td>
+			<td>varchar</td>
+			<td>SS, S, M, L, LL, LLL, せびれ, ウツボ</td>
+			<td>魚影の種類</td>
+		</tr>
+		<tr>
+			<td>biting</td>
+			<td>varchar</td>
+			<td>超長い, 長い, 普通, 短い, 超短い</td>
+			<td>エサに食いついている時間。<br>短いほど難易度が高い。</td>
+		</tr>
+		<tr>
+			<td>m○<br>(○=1~12)</td>
+			<td>int</td>
+			<td>0, 1</td>
+			<td>○月に釣れるかどうか（※2）</td>
+		</tr>
+		<tr>
+			<td>t○<br>(○=0~23)</td>
+			<td>int</td>
+			<td>0, 1</td>
+			<td>○時に釣れるかどうか（※2）</td>
+		</tr>
+		</table>
+		<p class="sql_example">
+			※1　朝...4:00~8:59、昼...9:00~15:59、夕...16:00~20:59、夜...21:00~3:59<br>
+			※2　0：釣れない　1：釣れる
+		</p>		
+</div>
+
+
+<h2 id="sea_creatures">海の幸（テーブル名：sea_creatures）</h2>
+<div class="def">
+	<table>
+			<tr>
+					<th>カラム名</th>
+					<th>データ型</th>
+					<th>値</th>
+					<th>内容（単位）</th>
+			</tr>
+			<tr>
+					<td>name</td>
+					<td>varchar</td>
+					<td>[文字列]</td>
+					<td>海の幸の名前</td>
+			</tr>
+			<tr>
+					<td>size</td>
+					<td>varchar</td>
+					<td>1×1, 2×1, 2×2</td>
+					<td>配置時の大きさ（マス）</td>
+			</tr>
+			<tr>
+				<td>price</td>
+				<td>int</td>
+				<td>[整数]</td>
+				<td>店での売値</td>
+		</tr>
+		<tr>
+			<td>place</td>
+			<td>varchar</td>
+			<td>海中</td>
+			<td>採れる場所</td>
+		</tr>
+		<tr>
+			<td>season</td>
+			<td>varchar</td>
+			<td>一年中, ○月〜○月<br>例：5月〜12月</td>
+			<td>採れる時期（カッコ内は南半球）</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>varchar</td>
+			<td>一日中, 朝/昼/夕/夜の組み合わせ（※1）<br>例：朝、夕、夜</td>
+			<td>採れる時間帯</td>
+		</tr>
+		<tr>
+			<td>weather</td>
+			<td>varchar</td>
+			<td>なし</td>
+			<td>天候条件</td>
+		</tr>
+		<tr>
+			<td>shadow</td>
+			<td>varchar</td>
+			<td>SS, S, M, L</td>
+			<td>魚影の種類</td>
+		</tr>
+		<tr>
+			<td>speed</td>
+			<td>varchar</td>
+			<td>うごかない, 超低速, 低速, 高速, 超高速</td>
+			<td>移動速度</td>
+		</tr>
+		<tr>
+			<td>m○<br>(○=1~12)</td>
+			<td>int</td>
+			<td>0, 1</td>
+			<td>○月に採れるかどうか（※2）</td>
+		</tr>
+		<tr>
+			<td>t○<br>(○=0~23)</td>
+			<td>int</td>
+			<td>0, 1</td>
+			<td>○時に採れるかどうか（※2）</td>
+		</tr>
+		</table>
+		<p class="sql_example">
+			※1　朝...4:00~8:59、昼...9:00~15:59、夕...16:00~20:59、夜...21:00~3:59<br>
+			※2　0：採れない　1：採れる
+		</p>		
+</div>
+

@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteBase /
+	RewriteRule ^$ https://doumori-db.ruricomugi.com/top/index.html [R=301,L]
+</IfModule>
+
+<Files ~ "mysql_login.php">
+	deny from all
+</Files>

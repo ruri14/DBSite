@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script>
+		// ポップアップ機能
+		$(function() {
+			$(".pop").click(function(e) {
+				e.preventDefault();
+				console.log("clicked");
+				$(".popup_bg").fadeIn();
+				$(".popup_wrapper").fadeIn();
+			});
+			$(".popup_bg").click(function() {
+				$(".popup_wrapper:visible").fadeOut();
+				$(".popup_bg").fadeOut();
+			});
+		});
+	</script>
+</head>
+
+<body>
+
+<div class="popup_bg"></div>
+<!-- ボタン要素 -->
+<a href="#m_navigation_left" class="pop">
+	<i class="fas fa-bars"></i>
+</a>
+
+<!-- popupで出てくる要素 -->
+<div id="m_navigation_left" class="popup_wrapper">
+	<div class="popup_wrapper_inner">
+		<ul class="ul_style_none">
+			<li><a href="../top/index.html">TOP</a></li>
+		</ul>
+		<ul class="ul_style_none">
+			<li><a href="../acnl/sql.html">とびだせどうぶつの森</a></li>
+			<li><a href="../acnh/sql.html">あつまれどうぶつの森</a></li>
+		</ul>
+	</div>
+</div>
+
+</body>

@@ -1,0 +1,128 @@
+<h1>あつまれどうぶつの森</h1>
+
+<p class="sql_description">
+	&lt;使い方&gt;<br>
+	入力欄にSQLクエリを入力しgoボタンを押すか、Ctrl+Enter(MacはCmd+Enter)で実行してください。<br>
+	テーブルの種類、カラム名、値は<a href="http://doumori-db.ruricomugi.com/acnh/info.html">データベース情報</a>を参考にしてください。<br>
+</p>
+
+<p class="sql_example">
+	例1) 1月の19時台に海で釣れる魚を売値が高い順に調べる（北半球）<br>
+	select *<br>
+	from fish<br>
+	where m1=1 and t19=1 and place='海'<br>
+	order by price desc;<br>
+</p>
+
+<p class="sql_example">
+	例2) 1月の19時台、雨が降っていない時に採れる虫を売値が高い順に調べる（北半球）<br>
+	select *<br>
+	from bugs<br>
+	where m1=1 and t19=1 and weather <> '雨天時のみ'<br>
+	order by price desc;<br>
+</p>
+
+<p class="sql_example">
+	例3) 4月の8時台に採れる魚・虫・海の幸を高い順に調べる（北半球）<br>
+	select * from (<br>
+	select name, size, price, place, season, time, weather, m4, t8 from fish<br>
+	union all select name, size, price, place, season, time, weather, m4, t8 from bugs<br>
+	union all select name, size, price, place, season, time, weather, m4, t8 from sea_creatures<br>
+	) as sub<br>
+	where m4=1 and t8=1<br>
+	order by price desc;</p>
+
+ <p class="sql_example">※unionやwithを含まない場合、"select * from table"の"*"はm1~12, t0~23を除く形に書き換えられます。<br>例："select * from bugs;" → "select name, size, price, place, season, time, weather from bugs;"</p>
+
+<!-- クエリ入力フォーム -->
+<form method="post" onsubmit="return false;">
+		<textarea type="text" id="sql"></textarea>
+		<input type="image" src="../img/go.png" width=40 id="run">
+</form>
+
+
+<div id="sql_result"></div>
+
+	
+<script>
+	$(function(){
+		// 実行ボタンクリック
+		$('#run').on('click',sql);
+		// command+enterが押された
+		$(document).on("keydown", "#sql", function(e) {
+			if ((e.ctrlKey || e.metaKey) && e.keyCode == 13 && $("#sql").val().replace(/\s/g, "").length > 0) {sql();}
+		});
+
+ 		function sql(){
+			// クエリ書き換え
+			var sql_input = $("#sql").val();
+			var sql_input = sql_input.replace(/\r?\n/g," ");
+			var sql_input = sql_input.replace("  ", " ");
+			var sql_val = sql_input.toLowerCase();
+			if(sql_val.indexOf("union")===-1 && sql_val.indexOf("with")===-1){
+				// select * from fishの書き換え
+				if(sql_val.indexOf("select * from fish")>-1){
+					sql_val=sql_val.replace("select * from fish", "select name,size,price,place,season,time,weather,shadow,biting from fish");
+				}
+				// select * from bugsの書き換え
+				if(sql_val.indexOf("select * from bugs")>-1){
+					sql_val=sql_val.replace("select * from bugs", "select name,size,price,place,season,time,weather from bugs");
+				}
+				// select * sea_creaturesの書き換え
+				if(sql_val.indexOf("select * from sea_creatures")>-1){
+					sql_val=sql_val.replace("select * from sea_creatures", "select name,size,price,place,season,time,weather,shadow,speed");
+				}
+			}
+			// ;の補完
+			if(!((sql_val.lastIndexOf(";")+1===sql_val.length)&&(1<=sql_val.length))){
+				sql_val=sql_val+";"
+			}
+			console.log(sql_val);
+			// insert, delete, update, drop, rename, truncate, alter, create, table, databaseを含まず、
+			// selectが含まれる場合のみ実行
+			if(sql_val.indexOf("insert ")>-1){
+				$("#sql_result").load("error.html #error_insert");
+			}else if(sql_val.indexOf("delete ")>-1){
+				$("#sql_result").load("error.html #error_delete");
+			}else if(sql_val.indexOf("update ")>-1){
+				$("#sql_result").load("error.html #error_update");
+			}else if(sql_val.indexOf("drop ")>-1){
+				$("#sql_result").load("error.html #error_drop");
+			}else if(sql_val.indexOf("rename ")>-1){
+				$("#sql_result").load("error.html #error_rename");
+			}else if(sql_val.indexOf("truncate ")>-1){
+				$("#sql_result").load("error.html #error_truncate");
+			}else if(sql_val.indexOf("alter ")>-1){
+				$("#sql_result").load("error.html #error_alter");
+			}else if(sql_val.indexOf("create ")>-1){
+				$("#sql_result").load("error.html #error_create");
+			}else if(sql_val.indexOf("table ")>-1){
+				$("#sql_result").load("error.html #error_table");
+			}else if(sql_val.indexOf("database ")>-1){
+				$("#sql_result").load("error.html #error_database");
+			}else if(sql_val.indexOf("select ")>-1){
+				$.ajax({
+					url:'sql.php',
+					type:'POST',
+					data:{
+						'sql':sql_val
+					}
+				})
+				// Ajaxリクエストが成功した時の処理
+				.done((data) => {
+					$('#sql_result').html(data);
+					console.log('done');
+				})
+				// Ajaxリクエストが失敗した時の処理
+				.fail((data) => {
+					console.log('failed');
+				})
+				// 常時の処理
+				.always((data) => {
+				});
+			}else{
+				$("#sql_result").load("error.html #error_select");
+			}
+		}
+	});
+</script>

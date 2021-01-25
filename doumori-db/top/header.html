@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<header>
+	<script>
+	//現在ページのURL(パス)を取得
+	var path = location.pathname;
+	//ナビゲーションのリスト要素を取得
+	var tab_list = $("ul.tab li");
+	//全てのナビゲーションに対してこれを実行
+	tab_list.each(function(){
+		//ナビゲーションの中の<a>のhrefの値を取得
+		var link = $(this).find('a').attr('href');
+		//pathの中にhrefの値が含まれていればclassを付与
+		if(path.indexOf(link) > -1){
+			$(this).addClass("current");
+	}
+});
+	</script>
+</header>
+
+<body>
+	<ul class="tab">
+		<li><a href="index.html">TOP</a></li>
+	</ul>	
+</body>
