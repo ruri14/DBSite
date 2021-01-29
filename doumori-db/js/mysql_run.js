@@ -21,14 +21,3 @@ function query_run(database,query_log,sql_val){
 	.always((data) => {
 	});
 }
-
-function query_save(database,query_log){
-	$.ajax({
-		url:'../php/sql.php',
-		type:'POST',
-		data:{
-			'database':database,
-			'query_log':query_log
-		}
-	});	
-}

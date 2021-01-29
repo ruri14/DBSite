@@ -114,8 +114,6 @@
 				query_run("acnl",query_log,sql_val);
 			}else{
 				$("#sql_result").load("error.html #error_select");
-				var query_log = "insert into query_log values ("+date_time+",0,\""+sql_input+"\");";
-				query_save("acnl",query_log,sql_val);
 			}
 		}
 	});
