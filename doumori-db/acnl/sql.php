@@ -1,6 +1,8 @@
 <?php
 
-require_once('../mysql_login.php');
+require_once('../php/mysql_login.php');
+$dsn_acnl = 'mysql:host=localhost;dbname=acnl;charset=utf8';
+
 try {
     $pdo = new PDO($dsn_acnl, $db_user, $db_pass);
 } catch (PDOException $e) {

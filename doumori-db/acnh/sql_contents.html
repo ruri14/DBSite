@@ -3,7 +3,7 @@
 <p class="sql_description">
 	&lt;使い方&gt;<br>
 	入力欄にSQLクエリを入力しgoボタンを押すか、Ctrl+Enter(MacはCmd+Enter)で実行してください。<br>
-	テーブルの種類、カラム名、値は<a href="http://doumori-db.ruricomugi.com/acnh/info.html">データベース情報</a>を参考にしてください。<br>
+	テーブルの種類、カラム名、値は<a href="https://doumori-db.ruricomugi.com/acnh/info.html">データベース情報</a>を参考にしてください。<br>
 </p>
 
 <p class="sql_example">
@@ -43,7 +43,8 @@
 
 <div id="sql_result"></div>
 
-	
+
+<script src="../js/mysql_run.js"></script>
 <script>
 	$(function(){
 		// 実行ボタンクリック
@@ -54,31 +55,37 @@
 		});
 
  		function sql(){
-			// クエリ書き換え
-			var sql_input = $("#sql").val();
-			var sql_input = sql_input.replace(/\r?\n/g," ");
-			var sql_input = sql_input.replace("  ", " ");
-			var sql_val = sql_input.toLowerCase();
-			if(sql_val.indexOf("union")===-1 && sql_val.indexOf("with")===-1){
-				// select * from fishの書き換え
-				if(sql_val.indexOf("select * from fish")>-1){
-					sql_val=sql_val.replace("select * from fish", "select name,size,price,place,season,time,weather,shadow,biting from fish");
-				}
-				// select * from bugsの書き換え
-				if(sql_val.indexOf("select * from bugs")>-1){
-					sql_val=sql_val.replace("select * from bugs", "select name,size,price,place,season,time,weather from bugs");
-				}
-				// select * sea_creaturesの書き換え
-				if(sql_val.indexOf("select * from sea_creatures")>-1){
-					sql_val=sql_val.replace("select * from sea_creatures", "select name,size,price,place,season,time,weather,shadow,speed");
-				}
-			}
+			// 時間取得
+			const date = new Date();
+			var date_time = "\""+date.toLocaleString().replace(" ","\"\,\"")+"\"";
+
+			// クエリ正規化
+			var sql_input = $("#sql").val().replace(/\r?\n/g," ").replace("  ", " ").toLowerCase();
 			// ;の補完
-			if(!((sql_val.lastIndexOf(";")+1===sql_val.length)&&(1<=sql_val.length))){
-				sql_val=sql_val+";"
+			if(!((sql_input.lastIndexOf(";")+1===sql_input.length)&&(1<=sql_input.length))){
+				sql_input=sql_input+";"
+			}
+			
+			var sql_val = sql_input;
+			// select * の書き換え
+			if(sql_input.indexOf("union")===-1 && sql_input.indexOf("with")===-1){
+				// fish
+				if(sql_input.indexOf("select * from fish")>-1){
+					sql_val=sql_input.replace("select * from fish", "select name,size,price,place,season,time,weather,shadow,biting from fish");
+				}
+				// bugs
+				if(sql_input.indexOf("select * from bugs")>-1){
+					sql_val=sql_input.replace("select * from bugs", "select name,size,price,place,season,time,weather from bugs");
+				}
+				// sea_creatures
+				if(sql_input.indexOf("select * from sea_creatures")>-1){
+					sql_val=sql_input.replace("select * from sea_creatures", "select name,size,price,place,season,time,weather,shadow,speed");
+				}
 			}
 			console.log(sql_val);
+
 			// insert, delete, update, drop, rename, truncate, alter, create, table, databaseを含まず、
+			// fish, bugs, sea_creaturesを含み, query_logを含まず、
 			// selectが含まれる場合のみ実行
 			if(sql_val.indexOf("insert ")>-1){
 				$("#sql_result").load("error.html #error_insert");
@@ -100,28 +107,16 @@
 				$("#sql_result").load("error.html #error_table");
 			}else if(sql_val.indexOf("database ")>-1){
 				$("#sql_result").load("error.html #error_database");
+			}else if((sql_val.indexOf("fish")==-1 && sql_val.indexOf("bugs")==-1 && sql_val.indexOf("sea_creatures")==-1) || sql_val.indexOf("query_log")>-1){
+				$("#sql_result").load("error.html #error_tablename");
 			}else if(sql_val.indexOf("select ")>-1){
-				$.ajax({
-					url:'sql.php',
-					type:'POST',
-					data:{
-						'sql':sql_val
-					}
-				})
-				// Ajaxリクエストが成功した時の処理
-				.done((data) => {
-					$('#sql_result').html(data);
-					console.log('done');
-				})
-				// Ajaxリクエストが失敗した時の処理
-				.fail((data) => {
-					console.log('failed');
-				})
-				// 常時の処理
-				.always((data) => {
-				});
+				// クエリ保存のクエリ作成
+				var query_log = "insert into query_log values ("+date_time+",1,\""+sql_input+"\");";
+				query_run("acnh",query_log,sql_val);
 			}else{
 				$("#sql_result").load("error.html #error_select");
+				var query_log = "insert into query_log values ("+date_time+",0,\""+sql_input+"\");";
+				query_save("acnh",query_log,sql_val);
 			}
 		}
 	});
