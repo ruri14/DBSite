@@ -30,7 +30,10 @@
 	order by rare;<br>
 </p>
 
-<p class="sql_example">※unionやwithを含まない場合、"select * from table"の"*"はm1~12, t0~23を除く形に書き換えられます。<br>例："select * from bugs;" → "select name, size, price, place, season, time, weather, rare, difficulty, normal_size, island from bugs;"</p>
+<p class="sql_example">
+	※MySQL5.7を利用しています。<br>
+	※unionを含まない場合、"select * from table"の"*"はm1~12, t0~23を除く形に書き換えられます。<br>例："select * from bugs;" → "select name, size, price, place, season, time, weather, rare, difficulty, normal_size, island from bugs;"
+</p>
 
 
 <!-- クエリ入力フォーム -->
@@ -67,7 +70,7 @@
 
 			var sql_val = sql_input;
 			// select * の書き換え
-			if(sql_input.indexOf("union")===-1 && sql_input.indexOf("with")===-1){
+			if(sql_input.indexOf("union")===-1){
 				// fish
 				if(sql_input.indexOf("select * from fish")>-1){
 					sql_val=sql_input.replace("select * from fish", "select name,size,price,place,season,time,weather,shadow,difficulty,normal_size,island from fish");
